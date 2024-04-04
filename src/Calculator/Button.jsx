@@ -1,5 +1,5 @@
 import React from "react";
-import style from "../src/Calculator/Calculator.module.css";
+import style from "./Calculator.module.css";
 
 export default function Button({ number, onClick }) {
   return (

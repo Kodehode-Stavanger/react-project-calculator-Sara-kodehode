@@ -1,30 +1,49 @@
 import React, { useState } from "react";
-import Button from "../Button";
+import Button from "./Button";
 import style from "./Calculator.module.css";
 
 export default function Calculator() {
   const [input, setInput] = useState("");
-  const [numbers, setNumbers] = useState([]);
   const [result, setResult] = useState("");
 
   const handleClick = (value) => {
     if (value === "=") {
-      setNumbers([...numbers, parseFloat(input)]);
       calculateResult();
+    } else if (value === "DEL") {
+      if (result !== "") {
+        setResult(result.slice(0, -1));
+      } else if (input !== "") {
+        setInput(input.slice(0, -1));
+      }
     } else if (value === "RESET") {
       clearDisplay();
     } else {
-      setInput((prevInput) => prevInput + value);
+      if (value === "." && input.includes(".")) {
+        return;
+      }
+      if (result !== "" && "+-*/".includes(value)) {
+        setInput(result + value);
+        clearResult();
+      } else {
+        setInput((prevInput) => prevInput + value);
+      }
     }
   };
 
   const clearDisplay = () => {
     setInput("");
-    setNumbers([]);
+    clearResult();
+  };
+
+  const clearResult = () => {
     setResult("");
   };
 
-  const calculateResult = () => {};
+  const calculateResult = () => {
+    const calculatedResult = eval(input);
+    setResult(calculatedResult);
+    setInput("");
+  };
 
   const buttons = [
     7,
@@ -59,7 +78,6 @@ export default function Calculator() {
         <div className={style.dispalyresult}>
           {result !== "" ? result : input}
         </div>
-        <div></div>
         <div className={style.buttonscontainer}>{buttonsArray}</div>
       </div>
     </>
